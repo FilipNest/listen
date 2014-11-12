@@ -1,3 +1,7 @@
+/*global console, AudioContext*/
+
+"use strict";
+
 // Detect if the audio context is supported.
 window.AudioContext = (
     window.AudioContext ||
@@ -6,11 +10,14 @@ window.AudioContext = (
 );
 
 if (!AudioContext) {
-document.getElementById("main").innerHTML = "You need a newer browser that supports the Web Audio API to play here.";
+    document.getElementById("main").innerHTML = "You need a newer browser that supports the Web Audio API to play here.";
 }
 
 // Create a new audio context.
 var ctx = new AudioContext();
+var player = ctx.listener;
+
+var newsound = function (x,y,z,file) {
 
 // Create a AudioGainNode to control the main volume.
 var mainVolume = ctx.createGain();
@@ -25,8 +32,6 @@ sound.volume = ctx.createGain();
 // Connect the sound source to the volume control.
 sound.source.connect(sound.volume);
 
-var player = ctx.listener;
-
 sound.panner = ctx.createPanner();
 // Instead of hooking up the volume to the main volume, hook it up to the panner.
 sound.volume.connect(sound.panner);
@@ -38,9 +43,9 @@ sound.source.loop = true;
 
 // Load a sound file using an ArrayBuffer XMLHttpRequest.
 var request = new XMLHttpRequest();
-request.open("GET", "blackbird.ogg", true);
+request.open("GET", file, true);
 request.responseType = "arraybuffer";
-request.onload = function(e) {
+request.onload = function (e) {
 
     // Create a buffer from the response ArrayBuffer.
     ctx.decodeAudioData(this.response, function onSuccess(buffer) {
@@ -50,10 +55,14 @@ request.onload = function(e) {
         sound.source.buffer = sound.buffer;
         sound.source.start(ctx.currentTime);
     }, function onFailure() {
-        alert("Decoding the audio buffer failed");
+        console.log("Decoding the audio buffer failed");
     });
 };
 request.send();
+    
+sound.panner.setPosition(x, y, z);
+        
+};
 
 var WIDTH = window.innerWidth;
 var HEIGHT = window.innerHeight;
@@ -66,56 +75,46 @@ function randomIntFromInterval(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-var objectx = WIDTH / 2 + randomIntFromInterval(-100, 100);
-var objecty = HEIGHT / 2 + randomIntFromInterval(-100, 100);
-var objectz = zPos;
-
 function relDiff(a, b) {
     return 100 * Math.abs((a - b) / ((a + b) / 2));
 }
 
-var move = function() {
+var move = function () {
     player.setPosition(xPos, yPos, zPos);
-
-    if (relDiff(xPos, objectx) < 1 && relDiff(yPos, objecty) < 1) {
-
-         document.getElementById("main").innerHTML = "Found. Refresh to start again with a new position";
-        
-        document.getElementById("main").setAttribute("class", "found");
-
-
-    }
 
 };
 
-move();
-sound.panner.setPosition(objectx, objecty, 300);
+newsound(xPos + randomIntFromInterval(50,-50),yPos + randomIntFromInterval(50,-50),295,"blackbird.ogg");
 
-document.onkeydown = function(e) {
+newsound(xPos + randomIntFromInterval(50,-50),yPos + randomIntFromInterval(50,-50),295,"palaufrog.ogg");
+
+move();
+
+document.onkeydown = function (e) {
     e = e || window.event;
     switch (e.which || e.keyCode) {
-        case 37: // left
-            xPos -= 1;
-            move();
-            break;
+    case 37: // left
+        xPos -= 1;
+        move();
+        break;
 
-        case 38: // up
-            yPos -= 1;
-            move();
-            break;
+    case 38: // up
+        yPos -= 1;
+        move();
+        break;
 
-        case 39: // right
-            xPos += 1;
-            move();
-            break;
+    case 39: // right
+        xPos += 1;
+        move();
+        break;
 
-        case 40: // down
-            yPos += 1;
-            move();
-            break;
+    case 40: // down
+        yPos += 1;
+        move();
+        break;
 
-        default:
-            return; // exit this handler for other keys
+    default:
+        return; // exit this handler for other keys
     }
     e.preventDefault(); // prevent the default action (scroll / move caret)
 };
