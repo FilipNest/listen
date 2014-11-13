@@ -67,8 +67,8 @@ sound.panner.setPosition(x, y, z);
 var WIDTH = window.innerWidth;
 var HEIGHT = window.innerHeight;
 
-var xPos = WIDTH / 2;
-var yPos = HEIGHT / 2;
+var x = WIDTH / 2;
+var y = HEIGHT / 2;
 var zPos = 295;
 
 function randomIntFromInterval(min, max) {
@@ -79,42 +79,122 @@ function relDiff(a, b) {
     return 100 * Math.abs((a - b) / ((a + b) / 2));
 }
 
-var move = function () {
-    player.setPosition(xPos, yPos, zPos);
+newsound(200,200,295,"blackbird.ogg");
 
-};
+//newsound(xPos + randomIntFromInterval(50,-50),yPos + randomIntFromInterval(50,-50),295,"palaufrog.ogg");
 
-newsound(xPos + randomIntFromInterval(50,-50),yPos + randomIntFromInterval(50,-50),295,"blackbird.ogg");
+//Drawing
 
-newsound(xPos + randomIntFromInterval(50,-50),yPos + randomIntFromInterval(50,-50),295,"palaufrog.ogg");
+	var counter = 0,
+		logoImage = new Image(),
+		TO_RADIANS = Math.PI/180; 
+	logoImage.src = 'jumper.png';
+	var canvas = document.createElement('canvas'); 
+	canvas.width = 1000; 
+	canvas.height = 1000; 
+	var context = canvas.getContext('2d'); 
+	document.body.appendChild(canvas); 
 
-move();
-
-document.onkeydown = function (e) {
-    e = e || window.event;
-    switch (e.which || e.keyCode) {
-    case 37: // left
-        xPos -= 1;
-        move();
-        break;
-
-    case 38: // up
-        yPos -= 1;
-        move();
-        break;
-
-    case 39: // right
-        xPos += 1;
-        move();
-        break;
-
-    case 40: // down
-        yPos += 1;
-        move();
-        break;
-
-    default:
-        return; // exit this handler for other keys
+	document.onkeydown = function (e) {
+     
+    if(e.which === 37) {
+     
+    window.clearInterval(window.left);
+    window.left = window.setInterval(function(){
+        
+    angle -= 50 * TO_RADIANS;
+    move();
+        
+    },5);
+    
+    
     }
-    e.preventDefault(); // prevent the default action (scroll / move caret)
-};
+        
+    if(e.which === 39) {
+    
+    window.clearInterval(window.right);
+    window.right = window.setInterval(function(){
+     
+    angle += 50 * TO_RADIANS;
+    move();
+        
+    },5);
+        
+    }
+        
+    if(e.which === 38) {
+        
+    window.clearInterval(window.up);
+    window.up = window.setInterval(function(){
+     
+    x += speed * Math.cos(angle * TO_RADIANS);
+    y += speed * Math.sin(angle * TO_RADIANS);
+    move();
+        
+    },5);
+        
+    }
+        
+    }
+    
+    document.onkeyup = function (e) {
+     
+    if(e.which === 37) {
+     
+    window.clearInterval(window.left);
+    
+    
+    }
+        
+    if(e.which === 39) {
+        
+    window.clearInterval(window.right);
+        
+    }
+        
+    if(e.which === 38) {
+     
+    window.clearInterval(window.up);
+        
+    }
+        
+    }
+    
+
+        var angle = 0,
+            x = 50,
+            y = 50,
+            speed = 0.5;
+        
+        var move = function(){
+        
+        drawRotatedImage(logoImage,x,y,angle);
+        player.setPosition(x, y, zPos);
+        player.setOrientation(angle,-angle,0,0,0,0);
+            
+        };
+	
+	
+	function drawRotatedImage(image, x, y, angle) { 
+
+        context.clearRect(0, 0, canvas.width, canvas.height)
+        
+		// save the current co-ordinate system 
+		// before we screw with it
+		context.save(); 
+
+		// move to the middle of where we want to draw our image
+		context.translate(x, y);
+
+		// rotate around that point, converting our 
+		// angle from degrees to radians 
+		context.rotate((angle + 90) * TO_RADIANS);
+
+		// draw it up and to the left by half the width
+		// and height of the image 
+		context.drawImage(image, -(image.width/2), -(image.height/2));
+
+		// and restore the co-ords to how they were when we began
+		context.restore(); 
+        context.fillRect(200,200,10,10);
+	}
