@@ -113,7 +113,7 @@ listen.controls.checkForObjects = function () {
 
   // Array of objects near the player
 
-  var nearObjects = [];
+  var nearObjects = {};
 
   // Function for checking distance
 
@@ -139,9 +139,14 @@ listen.controls.checkForObjects = function () {
 
     object = listen.world.player.room.objects[object];
 
-    console.log(checkDistance(object.position, listen.world.player.position));
+    nearObjects[object.name] = {
+      object: object,
+      distance: checkDistance(object.position, listen.world.player.position)
+    }
 
   });
+
+  return nearObjects;
 
 };
 
@@ -192,14 +197,17 @@ listen.controls.createRoom = function (name, sizex, sizey) {
 
   }
 
-  var room = Object.create(listen.world.room);
+  var room = {
 
-  room.size = {
-    x: sizex,
-    y: sizey
+    size: {
+      x: sizex,
+      y: sizey
+
+    },
+    name: name,
+    objects: {}
+
   }
-
-  room.name = name;
 
   listen.world.rooms[name] = room;
 
@@ -219,9 +227,13 @@ listen.controls.createObject = function (objectName) {
 
   // Add object to room
 
-  listen.world.objects[objectName] = Object.create(listen.world.object);
-
-  listen.world.objects[objectName].name = objectName;
+  listen.world.objects[objectName] = {
+    position: {
+      x: null,
+      y: null
+    },
+    name: objectName
+  };
 
 }
 
@@ -253,10 +265,6 @@ listen.controls.moveObjectToRoom = function (objectName, room, xPosition, yPosit
 
   }
 
-  // TODO delete any other places the object is in
-
-
-
   // Add object to room
 
   listen.world.rooms[room].objects[objectName] = listen.world.objects[objectName];
@@ -268,6 +276,18 @@ listen.controls.moveObjectToRoom = function (objectName, room, xPosition, yPosit
   listen.world.rooms[room].objects[objectName].position.x = xPosition;
   listen.world.rooms[room].objects[objectName].position.y = xPosition;
 
+  // Delete any other places the object is in
+
+  Object.keys(listen.world.rooms).forEach(function (roomcheck) {
+
+    if (listen.world.rooms[roomcheck].objects[objectName] && roomcheck !== room) {
+
+      delete listen.world.rooms[roomcheck].objects[objectName];
+
+    }
+
+  })
+
 };
 
 // Basic game
@@ -275,6 +295,8 @@ listen.controls.moveObjectToRoom = function (objectName, room, xPosition, yPosit
 // Create room
 
 listen.controls.createRoom("start", 500, 500);
+
+listen.controls.createRoom("end", 500, 500);
 
 // Move player to room
 
@@ -285,3 +307,9 @@ listen.controls.moveToRoom("start", 200, 200);
 listen.controls.createObject("chest");
 
 listen.controls.moveObjectToRoom("chest", "start", 400, 400);
+
+listen.controls.moveObjectToRoom("chest", "end", 400, 400);
+
+// Check player's distance from objects
+
+console.log(listen.controls.checkForObjects());
