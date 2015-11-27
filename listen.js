@@ -33,9 +33,28 @@ listen.world.room = {
 
   },
 
+  name: null,
+
   objects: {}
 
 };
+
+// Set up database of objects that can be placed in rooms
+
+listen.world.objects = {};
+
+// Master object from which all others are cloned
+
+listen.world.object = {
+
+  position: {
+    x: null,
+    y: null
+  },
+  name: null,
+  world: null
+
+}
 
 // Player controls
 
@@ -43,7 +62,7 @@ listen.controls = {};
 
 // Move player to a specific room
 
-listen.moveToRoom = function (room, x, y) {
+listen.controls.moveToRoom = function (room, x, y) {
 
   // Check if room exists, throw error if it doesn't
 
@@ -59,7 +78,7 @@ listen.moveToRoom = function (room, x, y) {
 
   // Check if requested player position in the room is actually in the room
 
-  if (listen.world.rooms[room].size.x > x || listen.world.rooms[room].size.y > y) {
+  if (listen.world.rooms[room].size.x < x || listen.world.rooms[room].size.y < y) {
 
     throw "Moving the player to room " + room + " but requested a position that doesn't fit in the room";
 
@@ -162,3 +181,107 @@ listen.controls.move = function (direction, amount) {
   }
 
 };
+
+// Function for creating rooms
+
+listen.controls.createRoom = function (name, sizex, sizey) {
+
+  if (listen.world.rooms[name]) {
+
+    throw "Room " + name + " already exists";
+
+  }
+
+  var room = Object.create(listen.world.room);
+
+  room.size = {
+    x: sizex,
+    y: sizey
+  }
+
+  room.name = name;
+
+  listen.world.rooms[name] = room;
+
+}
+
+// Function for creating objects
+
+listen.controls.createObject = function (objectName) {
+
+  // Check if object doesn't already exist
+
+  if (listen.world.objects[objectName]) {
+
+    throw "Object " + objectName + " already exists, yet you're trying to create it again.";
+
+  }
+
+  // Add object to room
+
+  listen.world.objects[objectName] = Object.create(listen.world.object);
+
+  listen.world.objects[objectName].name = objectName;
+
+}
+
+// Function for adding an object to a room
+
+listen.controls.moveObjectToRoom = function (objectName, room, xPosition, yPosition) {
+
+  // Check if room exists
+
+  if (!listen.world.rooms[room]) {
+
+    throw "Room " + room + " does not exist and you're trying to put object " + objectName + " in it";
+
+  }
+
+  // Check if object exists
+
+  if (!listen.world.objects[objectName]) {
+
+    throw "Object " + objectName + " does not exist and you're trying to put it in room " + room + ".";
+
+  }
+
+  // Check if object fits in room
+
+  if (xPosition > listen.world.rooms[room].size.x || yPosition > listen.world.rooms[room].size.y) {
+
+    throw "Room " + room + " isn't big enough for where you're trying to put " + objectName + ".";
+
+  }
+
+  // TODO delete any other places the object is in
+
+
+
+  // Add object to room
+
+  listen.world.rooms[room].objects[objectName] = listen.world.objects[objectName];
+
+  listen.world.objects[objectName].world = listen.world.rooms[room];
+
+  // Set position of object
+
+  listen.world.rooms[room].objects[objectName].position.x = xPosition;
+  listen.world.rooms[room].objects[objectName].position.y = xPosition;
+
+};
+
+// Basic game
+
+// Create room
+
+listen.controls.createRoom("start", 500, 500);
+
+// Move player to room
+
+listen.controls.moveToRoom("start", 200, 200);
+
+// Create a sample object
+
+listen.controls.createObject("chest");
+
+listen.controls.moveObjectToRoom("chest", "start", 400, 400);
