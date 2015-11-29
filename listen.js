@@ -96,22 +96,6 @@ listen.controls.moveToRoom = function (room, x, y) {
 
 };
 
-// Check if a person is still in the room
-
-listen.controls.checkRoomBounds = function () {
-
-  if (listen.world.player.position.x > listen.world.player.room.size.x || listen.world.player.position.y > listen.world.player.room.size.y) {
-
-    return false;
-
-  } else {
-
-    return true;
-
-  }
-
-};
-
 // Check if person is near an object in the room
 
 listen.controls.checkForObjects = function () {
@@ -170,14 +154,14 @@ listen.controls.move = function (direction, amount) {
 
   switch (direction) {
     case "y":
-      if (listen.controls.checkRoomBounds()) {
+      if (listen.world.player.position.y + amount < listen.world.player.room.size.height) {
         listen.world.player.position.y += amount;
       } else {
         return false;
       }
       break;
     case "x":
-      if (listen.controls.checkRoomBounds()) {
+      if (listen.world.player.position.x - amount < listen.world.player.room.size.width) {
         listen.world.player.position.x -= amount;
       } else {
         return false;
@@ -453,6 +437,8 @@ listen.controls.checkCondition = function (conditions) {
 
 // Game tick
 
+listen.controls.paused = false;
+
 listen.controls.tick = function () {
 
   window.setInterval(function () {
@@ -464,10 +450,12 @@ listen.controls.tick = function () {
 
           console.log(listen.world.player.options);
 
+          listen.controls.paused = true;
+
         }, 2000);
       }
 
-    } else {
+    } else if (!listen.controls.paused) {
 
       // Clear hold timeout
 
@@ -482,12 +470,15 @@ listen.controls.tick = function () {
       listen.controls.move("x", velx);
       listen.controls.move("y", vely);
 
-      document.getElementById("result").innerHTML = "X:" + listen.world.player.position.x + ",<br />" + "Y:" + listen.world.player.position.y;
+      //       Debugging rectangles
 
-      var canvas = document.getElementById("area"),
-        context = canvas.getContext("2d");
-
-      context.strokeRect(listen.world.player.position.x, listen.world.player.position.y, 50, 50)
+      //            var canvas = document.getElementById("area"),
+      //           context = canvas.getContext("2d");
+      //
+      //         context.strokeRect(listen.world.player.position.x, listen.world.player.position.y, 50, 50)
+      //
+      //
+      //         context.strokeRect(300, 300, 10, 10)
 
     }
 
@@ -504,6 +495,12 @@ listen.controls.tick = function () {
     }
 
   }, 100)
+};
+
+listen.controls.trackClicks = function () {
+
+
+
 };
 
 
