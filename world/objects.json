@@ -1,12 +1,12 @@
 {
   "chest": {
     "startingPosition": {
-      "room": null,
-      "x": null,
-      "y": null
+      "room": "start",
+      "x": 300,
+      "y": 200
     },
     "conditions": {
-      "gold": "5"
+      "gold": ">4"
     },
     "choices": [{
       "conditions": {

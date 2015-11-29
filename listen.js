@@ -19,7 +19,8 @@ listen.world.player = {
     "x": 0,
     "y": 0
   },
-  room: null
+  room: null,
+  attributes: {}
 };
 
 // List of rooms
@@ -82,7 +83,7 @@ listen.controls.moveToRoom = function (room, x, y) {
 
   // Check if requested player position in the room is actually in the room
 
-  if (listen.world.rooms[room].size.x < x || listen.world.rooms[room].size.y < y) {
+  if (listen.world.rooms[room].size.width < x || listen.world.rooms[room].size.height < y) {
 
     throw "Moving the player to room " + room + " but requested a position that doesn't fit in the room";
 
@@ -139,13 +140,16 @@ listen.controls.checkForObjects = function () {
 
   Object.keys(listen.world.player.room.objects).forEach(function (object) {
 
-    // Fetch object
+    // Check if object is visible by running conditions check
 
-    object = listen.world.player.room.objects[object];
+    var object = listen.world.player.room.objects[object];
+    var distance = checkDistance(object.position, listen.world.player.position);
+
+    console.log(listen.controls.checkCondition(object.conditions))
 
     nearObjects[object.name] = {
       object: object,
-      distance: checkDistance(object.position, listen.world.player.position)
+      distance: distance
     }
 
   });
@@ -191,56 +195,6 @@ listen.controls.move = function (direction, amount) {
 
 };
 
-// Function for creating rooms
-
-listen.controls.createRoom = function (name, sizex, sizey) {
-
-  if (listen.world.rooms[name]) {
-
-    throw "Room " + name + " already exists";
-
-  }
-
-  var room = {
-
-    size: {
-      x: sizex,
-      y: sizey
-
-    },
-    name: name,
-    objects: {}
-
-  }
-
-  listen.world.rooms[name] = room;
-
-}
-
-// Function for creating objects
-
-listen.controls.createObject = function (objectName) {
-
-  // Check if object doesn't already exist
-
-  if (listen.world.objects[objectName]) {
-
-    throw "Object " + objectName + " already exists, yet you're trying to create it again.";
-
-  }
-
-  // Add object to room
-
-  listen.world.objects[objectName] = {
-    position: {
-      x: null,
-      y: null
-    },
-    name: objectName
-  };
-
-}
-
 // Function for adding an object to a room
 
 listen.controls.moveObjectToRoom = function (objectName, room, xPosition, yPosition) {
@@ -263,7 +217,7 @@ listen.controls.moveObjectToRoom = function (objectName, room, xPosition, yPosit
 
   // Check if object fits in room
 
-  if (xPosition > listen.world.rooms[room].size.x || yPosition > listen.world.rooms[room].size.y) {
+  if (xPosition > listen.world.rooms[room].size.width || yPosition > listen.world.rooms[room].size.height) {
 
     throw "Room " + room + " isn't big enough for where you're trying to put " + objectName + ".";
 
@@ -373,6 +327,7 @@ listen.readJSON("world/settings.json").then(function (result) {
       Object.keys(rooms).forEach(function (room) {
 
         listen.world.rooms[room] = rooms[room];
+
         roomIndex += 1;
 
         if (roomIndex === listen.settings.roomFiles.length) {
@@ -391,32 +346,115 @@ listen.readJSON("world/settings.json").then(function (result) {
 
 // World loaded, ready.
 
-listen.ready = function(){
-  
-  console.log(listen);
-  
+listen.ready = function () {
+
+  // Move player to starting room
+
+  listen.controls.moveToRoom(listen.settings.playerStartPosition.room, listen.settings.playerStartPosition.x, listen.settings.playerStartPosition.y);
+
+  Object.keys(listen.world.rooms).forEach(function (room) {
+
+    if (!listen.world.rooms[room].objects) {
+
+      listen.world.rooms[room].objects = {};
+
+    }
+
+  })
+
+  // Move all objects to their starting rooms if one is set
+
+  Object.keys(listen.world.objects).forEach(function (element) {
+
+    var thing = listen.world.objects[element];
+
+    if (!thing.position) {
+
+      thing.position = {
+        x: 0,
+        y: 0
+      }
+
+    }
+
+    if (!thing.name) {
+
+      thing.name = element;
+
+    }
+
+    if (thing.startingPosition.room) {
+
+      listen.controls.moveObjectToRoom(element, thing.startingPosition.room, thing.startingPosition.x, thing.startingPosition.y);
+
+    }
+
+  })
+
+  // Add starting attributes to player
+
+  listen.world.player.attributes = listen.settings.playerStartAttributes;
+
 };
 
-//// Basic game
-//
-//// Create room
-//
-//listen.controls.createRoom("start", 500, 500);
-//
-//listen.controls.createRoom("end", 500, 500);
-//
-//// Move player to room
-//
+// Function for checking conditions
+
+listen.controls.checkCondition = function (conditions) {
+
+  var result;
+
+  Object.keys(conditions).forEach(function (attribute) {
+
+    // See what kind of attribute value operator it is
+
+    var attributeValue = conditions[attribute].substring(1);;
+    var operator = conditions[attribute][0];
+
+    switch (operator) {
+
+      case "=":
+        if (listen.world.player.attributes[attribute] && listen.world.player.attributes[attribute] == attributeValue) {
+
+          result = true;
+
+        } else {
+
+          result = false;
+
+        }
+        break;
+      case "<":
+        if (!listen.world.player.attributes[attribute] || listen.world.player.attributes[attribute] < attributeValue) {
+
+          result = true;
+
+        } else {
+
+          result = false;
+
+        }
+        break;
+      case ">":
+        if (listen.world.player.attributes[attribute] && listen.world.player.attributes[attribute] > attributeValue) {
+
+          result = true;
+
+        } else {
+
+          result = false;
+
+        };
+        break;
+      default:
+        result = false;
+    }
+
+  })
+
+  return result;
+
+}
+
 //listen.controls.moveToRoom("start", 200, 200);
-//
-//// Create a sample object
-//
-//listen.controls.createObject("chest");
-//
-//listen.controls.moveObjectToRoom("chest", "start", 400, 400);
-//
 //listen.controls.moveObjectToRoom("chest", "end", 400, 400);
-//
-//// Check player's distance from objects
-//
-//console.log(listen.controls.checkForObjects());
+//listen.controls.checkForObjects();
