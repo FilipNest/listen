@@ -4,10 +4,28 @@
       "room": null,
       "x": null,
       "y": null
-
     },
     "conditions": {
-      "gold": 5
-    }
+      "gold": "5"
+    },
+    "choices": [{
+      "conditions": {
+
+        "gold": ">5"
+
+      },
+      "description": "alarm.mp3",
+      "actions": {
+        "attributes": {
+          "gold": "+1"
+        },
+        "movements": {
+          "thing": "Player",
+          "room": "start",
+          "x": 400,
+          "y": 400
+        }
+      }
+    }]
   }
 }

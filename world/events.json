@@ -1,0 +1,18 @@
+{
+  "finished": {
+    "conditions": {
+      "gold": "6"
+    },
+    "actions": {
+      "attributes": {
+        "gold": "+1"
+      },
+      "movements": {
+        "thing": "Player",
+        "room": "start",
+        "x": 400,
+        "y": 400
+      }
+    }
+  }
+}
