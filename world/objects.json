@@ -3,10 +3,11 @@
     "startingPosition": {
       "room": "start",
       "x": 300,
-      "y": 200
+      "y": 300
     },
+    "triggerDistance": 200,
     "conditions": {
-      "gold": ">4"
+      "gold": ">3"
     },
     "choices": [{
       "conditions": {

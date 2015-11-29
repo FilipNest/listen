@@ -147,11 +147,15 @@ listen.controls.checkForObjects = function () {
 
     if (listen.controls.checkCondition(object.conditions)) {
 
-      nearObjects[object.name] = {
-        object: object,
-        distance: distance
+      if (distance < object.triggerDistance) {
+
+        nearObjects[object.name] = {
+          object: object,
+          distance: distance
+        }
+
       }
-      
+
     }
 
   });
@@ -456,6 +460,8 @@ listen.controls.checkCondition = function (conditions) {
   return result;
 
 }
+
+
 
 //listen.controls.moveToRoom("start", 200, 200);
 //listen.controls.moveObjectToRoom("chest", "end", 400, 400);
