@@ -387,6 +387,10 @@ listen.ready = function () {
 
   listen.world.player.attributes = listen.settings.playerStartAttributes;
 
+  // Start tick
+
+  listen.controls.tick();
+
 };
 
 // Function for checking conditions
@@ -449,32 +453,61 @@ listen.controls.checkCondition = function (conditions) {
 
 // Game tick
 
-window.setInterval(function () {
+listen.controls.tick = function () {
 
-  if (joystick.distance === 0) {
+  window.setInterval(function () {
+
+    if (joystick.distance === 0) {
+
+      if (!listen.world.player.holdTimeout && joystick.on) {
+        listen.world.player.holdTimeout = window.setTimeout(function () {
+
+          console.log(listen.world.player.options);
+
+        }, 2000);
+      }
+
+    } else {
+
+      // Clear hold timeout
+
+      if (listen.world.player.holdTimeout) {
+        window.clearTimeout(listen.world.player.holdTimeout);
+        delete listen.world.player.holdTimeout;
+      }
+
+      var vely = -(5 * Math.cos(joystick.angle));
+      var velx = -(5 * Math.sin(joystick.angle));
+
+      listen.controls.move("x", velx);
+      listen.controls.move("y", vely);
+
+      document.getElementById("result").innerHTML = "X:" + listen.world.player.position.x + ",<br />" + "Y:" + listen.world.player.position.y;
+
+      var canvas = document.getElementById("area"),
+        context = canvas.getContext("2d");
+
+      context.strokeRect(listen.world.player.position.x, listen.world.player.position.y, 50, 50)
+
+    }
+
+    // Check for objects
+
+    if (Object.keys(listen.controls.checkForObjects()).length) {
+
+      listen.world.player.options = listen.controls.checkForObjects();
+
+    } else {
+
+      listen.world.player.options = null;
+
+    }
+
+  }, 100)
+};
 
 
-  } else {
-
-    var vely = -(5 * Math.cos(joystick.angle));
-    var velx = -(5 * Math.sin(joystick.angle));
-
-    listen.controls.move("x", velx);
-    listen.controls.move("y", vely);
-
-    document.getElementById("result").innerHTML = "X:" + listen.world.player.position.x + ",<br />" + "Y:" + listen.world.player.position.y;
-
-    // Debugging rectangle
-
-//        var canvas = document.getElementById("area"),
-//          context = canvas.getContext("2d");
-//    
-//        context.strokeRect(listen.world.player.position.x, listen.world.player.position.y, 50, 50)
-
-  }
-
-}, 100)
+listen.world.player.options = null;
 
 //listen.controls.moveToRoom("start", 200, 200);
 //listen.controls.moveObjectToRoom("chest", "end", 400, 400);
-//listen.controls.checkForObjects();

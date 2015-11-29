@@ -54,7 +54,7 @@ window.addEventListener('load', function () {
 
       // angle in radians
       joystick.angle = Math.atan2(p2.x - p1.x, -p2.y - -p1.y);
-      
+
       //Clear canvas
 
       canvas.width = canvas.width;
@@ -95,6 +95,7 @@ window.addEventListener('load', function () {
 
 
   function start(event) {
+    joystick.on = true;
     joystick.mode = true;
     joystick.homex = event.clientX;
     joystick.homey = event.clientY;
@@ -108,7 +109,8 @@ window.addEventListener('load', function () {
       x: 0,
       y: 0,
       distance: 0,
-      angle: joystick.angle
+      angle: joystick.angle,
+      on: false
     };
     canvas.width = canvas.width;
   }
