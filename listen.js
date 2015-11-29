@@ -461,7 +461,33 @@ listen.controls.checkCondition = function (conditions) {
 
 }
 
+// Game tick
 
+window.setInterval(function () {
+
+  if (joystick.distance === 0) {
+
+
+  } else {
+
+    var vely = -(5 * Math.cos(joystick.angle));
+    var velx = -(5 * Math.sin(joystick.angle));
+
+    listen.controls.move("left", velx);
+    listen.controls.move("up", vely);
+
+    document.getElementById("result").innerHTML = "X:" + listen.world.player.position.x + ",<br />" + "Y:" + listen.world.player.position.y;
+
+    // Debugging rectangle
+    
+//    var canvas = document.getElementById("area"),
+//      context = canvas.getContext("2d");
+//
+//    context.strokeRect(listen.world.player.position.x, listen.world.player.position.y, 50, 50)
+
+  }
+
+}, 100)
 
 //listen.controls.moveToRoom("start", 200, 200);
 //listen.controls.moveObjectToRoom("chest", "end", 400, 400);
