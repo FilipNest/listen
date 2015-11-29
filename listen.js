@@ -145,11 +145,13 @@ listen.controls.checkForObjects = function () {
     var object = listen.world.player.room.objects[object];
     var distance = checkDistance(object.position, listen.world.player.position);
 
-    console.log(listen.controls.checkCondition(object.conditions))
+    if (listen.controls.checkCondition(object.conditions)) {
 
-    nearObjects[object.name] = {
-      object: object,
-      distance: distance
+      nearObjects[object.name] = {
+        object: object,
+        distance: distance
+      }
+      
     }
 
   });
