@@ -387,7 +387,7 @@ listen.controls.checkCondition = function (conditions) {
 
     // See what kind of attribute value operator it is
 
-    var attributeValue = conditions[attribute].substring(1);;
+    var attributeValue = parseFloat(conditions[attribute].substring(1));
     var operator = conditions[attribute][0];
 
     switch (operator) {
@@ -467,8 +467,44 @@ listen.controls.tick = function () {
 
                 var selected = Object.keys(listen.world.player.options)[result - 1];
 
-                console.log(selected);
                 listen.controls.paused = false;
+
+                if (listen.world.player.options[selected].object.choices && listen.world.player.options[selected].object.choices.length > 0) {
+
+                  var choices = listen.world.player.options[selected].object.choices;
+
+                  // Check conditions for choices
+
+                  var availableChoices = [];
+
+                  choices.forEach(function (choice) {
+
+                    if (listen.controls.checkCondition(choice.conditions)) {
+
+                      availableChoices.push(choice);
+
+                    }
+
+                  })
+
+                  // Show list of available choices and trigger timeout
+
+                  console.log("Pick a choice!");
+
+                  listen.controls.trackClicks(4000, function (result) {
+
+                    if (availableChoices[result - 1]) {
+
+                      listen.controls.action(availableChoices[result - 1].actions);
+
+                    }
+
+                  });
+
+                } else {
+
+
+                }
 
               }
 
@@ -549,6 +585,57 @@ listen.controls.trackClicks = function (time, callback) {
 }
 
 listen.world.player.options = null;
+
+// Select an action
+
+listen.controls.action = function (action) {
+
+  // Add attributes
+
+  if (action.attributes) {
+
+    Object.keys(action.attributes).forEach(function (attribute) {
+
+      // See what kind of attribute value operator it is
+
+      var attributeValue = parseFloat(action.attributes[attribute].substring(1));
+      var operator = action.attributes[attribute][0];
+
+      switch (operator) {
+
+        case "=":
+
+          listen.world.player.attributes[attribute] = attributeValue;
+
+          break;
+        case "+":
+          if (!listen.world.player.attributes[attribute]) {
+
+            listen.world.player.attributes[attribute] = attributeValue
+
+          } else {
+
+            listen.world.player.attributes[attribute] += attributeValue
+
+          }
+
+          break;
+        case "-":
+
+          if (listen.world.player.attributes[attribute]) {
+
+            listen.world.player.attributes[attribute] -= attributeValue
+
+          }
+
+          break;
+      }
+
+    })
+
+  }
+
+};
 
 //listen.controls.moveToRoom("start", 200, 200);
 //listen.controls.moveObjectToRoom("chest", "end", 400, 400);

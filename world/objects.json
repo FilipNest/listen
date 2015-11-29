@@ -10,23 +10,42 @@
       "gold": ">3"
     },
     "choices": [{
-      "conditions": {
+        "conditions": {
 
-        "gold": ">5"
+          "gold": ">4"
 
-      },
-      "description": "alarm.mp3",
-      "actions": {
-        "attributes": {
-          "gold": "+1"
         },
-        "movements": {
-          "thing": "Player",
-          "room": "start",
-          "x": 400,
-          "y": 400
+        "description": "alarm.mp3",
+        "actions": {
+          "attributes": {
+            "gold": "+1"
+          },
+          "movements": {
+            "thing": "Player",
+            "room": "start",
+            "x": 400,
+            "y": 400
+          }
         }
-      }
+    },
+      {
+        "conditions": {
+
+          "gold": ">3"
+
+        },
+        "description": "hello.mp3",
+        "actions": {
+          "attributes": {
+            "gold": "+1"
+          },
+          "movements": {
+            "thing": "Player",
+            "room": "start",
+            "x": 400,
+            "y": 400
+          }
+        }
     }]
   }
 }
