@@ -525,7 +525,7 @@ listen.controls.tick = function () {
 
     } else if (!listen.controls.paused) {
 
-      console.log("hello");
+      listen.world.player.position.angle = joystick.angle;
 
       // Clear hold timeout
 
