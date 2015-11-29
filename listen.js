@@ -169,30 +169,16 @@ listen.controls.checkForObjects = function () {
 listen.controls.move = function (direction, amount) {
 
   switch (direction) {
-    case "up":
+    case "y":
       if (listen.controls.checkRoomBounds()) {
         listen.world.player.position.y += amount;
       } else {
         return false;
       }
       break;
-    case "down":
-      if (listen.controls.checkRoomBounds()) {
-        listen.world.player.position.y -= amount;
-      } else {
-        return false;
-      }
-      break;
-    case "left":
+    case "x":
       if (listen.controls.checkRoomBounds()) {
         listen.world.player.position.x -= amount;
-      } else {
-        return false;
-      }
-      break;
-    case "right":
-      if (listen.controls.checkRoomBounds()) {
-        listen.world.player.position.x += amount;
       } else {
         return false;
       }
@@ -473,17 +459,17 @@ window.setInterval(function () {
     var vely = -(5 * Math.cos(joystick.angle));
     var velx = -(5 * Math.sin(joystick.angle));
 
-    listen.controls.move("left", velx);
-    listen.controls.move("up", vely);
+    listen.controls.move("x", velx);
+    listen.controls.move("y", vely);
 
     document.getElementById("result").innerHTML = "X:" + listen.world.player.position.x + ",<br />" + "Y:" + listen.world.player.position.y;
 
     // Debugging rectangle
-    
-//    var canvas = document.getElementById("area"),
-//      context = canvas.getContext("2d");
-//
-//    context.strokeRect(listen.world.player.position.x, listen.world.player.position.y, 50, 50)
+
+//        var canvas = document.getElementById("area"),
+//          context = canvas.getContext("2d");
+//    
+//        context.strokeRect(listen.world.player.position.x, listen.world.player.position.y, 50, 50)
 
   }
 
