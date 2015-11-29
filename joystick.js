@@ -95,6 +95,13 @@ window.addEventListener('load', function () {
 
 
   function start(event) {
+
+    if (listen.controls.clickTimerOn) {
+
+      listen.controls.clickCount += 1;
+
+    }
+
     joystick.on = true;
     joystick.mode = true;
     joystick.homex = event.clientX;

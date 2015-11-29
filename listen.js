@@ -446,16 +446,50 @@ listen.controls.tick = function () {
     if (joystick.distance === 0) {
 
       if (!listen.world.player.holdTimeout && joystick.on) {
+
         listen.world.player.holdTimeout = window.setTimeout(function () {
 
-          console.log(listen.world.player.options);
-
           listen.controls.paused = true;
+
+          if (listen.world.player.options) {
+
+            console.log("Click your selection");
+
+            listen.controls.trackClicks(4000, function (result) {
+
+              if (result > Object.keys(listen.world.player.options).length + 1) {
+
+                console.log("cancelled");
+                listen.controls.paused = false;
+                return false;
+
+              } else {
+
+                var selected = Object.keys(listen.world.player.options)[result - 1];
+
+                console.log(selected);
+                listen.controls.paused = false;
+
+              }
+
+            })
+
+          } else {
+
+            listen.controls.paused = false;
+
+            console.log("Nothing to see here");
+
+
+          }
+
 
         }, 2000);
       }
 
     } else if (!listen.controls.paused) {
+
+      console.log("hello");
 
       // Clear hold timeout
 
@@ -497,12 +531,22 @@ listen.controls.tick = function () {
   }, 100)
 };
 
-listen.controls.trackClicks = function () {
+listen.controls.clickCount = 0;
+listen.controls.clickTimerOn = false;
 
+listen.controls.trackClicks = function (time, callback) {
 
+  listen.controls.clickTimerOn = true;
 
-};
+  window.setTimeout(function () {
 
+    callback(listen.controls.clickCount);
+
+    listen.controls.clickTimerOn = false;
+
+  }, time)
+
+}
 
 listen.world.player.options = null;
 
