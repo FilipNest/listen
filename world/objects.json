@@ -1,0 +1,13 @@
+{
+  "chest": {
+    "startingPosition": {
+      "room": null,
+      "x": null,
+      "y": null
+
+    },
+    "conditions": {
+      "gold": 5
+    }
+  }
+}

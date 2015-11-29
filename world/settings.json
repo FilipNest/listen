@@ -1,0 +1,10 @@
+{
+  "name": "Adventure",
+  "roomFiles": ["rooms.json"],
+  "objectFiles": ["objects.json"],
+  "playerStartAttributes": {
+
+    "gold": null
+
+  }
+}

@@ -4,6 +4,10 @@
 
 var listen = {};
 
+// Settings
+
+listen.settings = {};
+
 // Set up world
 
 listen.world = {};
@@ -290,26 +294,129 @@ listen.controls.moveObjectToRoom = function (objectName, room, xPosition, yPosit
 
 };
 
-// Basic game
+// Function for reading JSON files and storing their settings
 
-// Create room
+listen.readJSON = function (url) {
 
-listen.controls.createRoom("start", 500, 500);
+  return new Promise(function (yes, no) {
 
-listen.controls.createRoom("end", 500, 500);
+    // Read in settings file to get settings
 
-// Move player to room
+    var request = new XMLHttpRequest();
 
-listen.controls.moveToRoom("start", 200, 200);
+    request.open('GET', url, true);
 
-// Create a sample object
+    request.onload = function () {
 
-listen.controls.createObject("chest");
+      if (request.status >= 200 && request.status < 400) {
 
-listen.controls.moveObjectToRoom("chest", "start", 400, 400);
+        yes(JSON.parse(request.responseText));
 
-listen.controls.moveObjectToRoom("chest", "end", 400, 400);
+      } else {
 
-// Check player's distance from objects
+        throw "Could not read a settings file"
 
-console.log(listen.controls.checkForObjects());
+      }
+    };
+
+    request.onerror = function () {
+      // There was a connection error of some sort
+    };
+
+    request.send()
+
+  })
+
+};
+
+listen.readJSON("world/settings.json").then(function (result) {
+
+  listen.settings = result;
+
+  // Load in all rooms
+
+  var loadedRooms = function () {
+
+    // Rooms are loaded, now load in objects
+
+    var objectIndex = 0;
+
+    listen.settings.objectFiles.forEach(function (objectfile) {
+
+      listen.readJSON("world/" + objectfile).then(function (things) {
+
+        Object.keys(things).forEach(function (thing) {
+
+          listen.world.objects[thing] = things[thing];
+          objectIndex += 1;
+
+          if (objectIndex === listen.settings.objectFiles.length) {
+
+            listen.ready();
+
+          }
+
+        });
+
+      })
+
+    })
+
+  };
+
+  var roomIndex = 0;
+
+  listen.settings.roomFiles.forEach(function (roomfile) {
+
+    listen.readJSON("world/" + roomfile).then(function (rooms) {
+
+      Object.keys(rooms).forEach(function (room) {
+
+        listen.world.rooms[room] = rooms[room];
+        roomIndex += 1;
+
+        if (roomIndex === listen.settings.roomFiles.length) {
+
+          loadedRooms();
+
+        }
+
+      });
+
+    })
+
+  })
+
+})
+
+// World loaded, ready.
+
+listen.ready = function(){
+  
+  console.log(listen);
+  
+};
+
+//// Basic game
+//
+//// Create room
+//
+//listen.controls.createRoom("start", 500, 500);
+//
+//listen.controls.createRoom("end", 500, 500);
+//
+//// Move player to room
+//
+//listen.controls.moveToRoom("start", 200, 200);
+//
+//// Create a sample object
+//
+//listen.controls.createObject("chest");
+//
+//listen.controls.moveObjectToRoom("chest", "start", 400, 400);
+//
+//listen.controls.moveObjectToRoom("chest", "end", 400, 400);
+//
+//// Check player's distance from objects
+//
+//console.log(listen.controls.checkForObjects());
