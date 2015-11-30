@@ -494,69 +494,83 @@ listen.controls.tick = function () {
 
             console.log("Click your selection");
 
-            listen.controls.trackClicks(4000, function (result) {
+            // Add sounds to sound list
 
-              if (result > Object.keys(listen.world.player.options).length + 1) {
+            var objectOptions = [];
 
-                console.log("cancelled");
-                listen.controls.paused = false;
-                return false;
+            Object.keys(listen.world.player.options).forEach(function (soundThing) {
+              
+              objectOptions.push("world/sounds/" + listen.world.player.options[soundThing].object["soundFile"]);
 
-              } else {
+            })
 
-                var selected = Object.keys(listen.world.player.options)[result - 1];
+            listen.playSoundList(objectOptions, function () {
 
-                listen.controls.paused = false;
+              listen.controls.trackClicks(4000, function (result) {
 
-                if (listen.world.player.options[selected].object.choices && listen.world.player.options[selected].object.choices.length > 0) {
+                if (result > Object.keys(listen.world.player.options).length + 1) {
 
-                  var choices = listen.world.player.options[selected].object.choices;
-
-                  // Check conditions for choices
-
-                  var availableChoices = [];
-
-                  choices.forEach(function (choice) {
-
-                    if (listen.controls.checkCondition(choice.conditions)) {
-
-                      availableChoices.push(choice);
-
-                    }
-
-                  })
-
-                  // Show list of available choices and trigger timeout
-
-                  console.log("Pick a choice!");
-
-                  var showOptions = function () {
-
-                    listen.controls.trackClicks(4000, function (result) {
-
-                      if (availableChoices[result - 1]) {
-
-                        listen.controls.action(availableChoices[result - 1].actions);
-
-                      } else {
-
-                        listen.triggerSound("world/sounds/notanoption.mp3");
-                        showOptions();
-
-                      }
-
-                    });
-
-                  }
-
-                  showOptions();
+                  console.log("cancelled");
+                  listen.controls.paused = false;
+                  return false;
 
                 } else {
 
+                  var selected = Object.keys(listen.world.player.options)[result - 1];
+
+                  listen.controls.paused = false;
+
+                  if (listen.world.player.options[selected].object.choices && listen.world.player.options[selected].object.choices.length > 0) {
+
+                    var choices = listen.world.player.options[selected].object.choices;
+
+                    // Check conditions for choices
+
+                    var availableChoices = [];
+
+                    choices.forEach(function (choice) {
+
+                      if (listen.controls.checkCondition(choice.conditions)) {
+
+                        availableChoices.push(choice);
+
+                      }
+
+                    })
+
+                    // Show list of available choices and trigger timeout
+
+                    console.log("Pick a choice!");
+
+                    var showOptions = function () {
+
+                      listen.controls.trackClicks(4000, function (result) {
+
+                        if (availableChoices[result - 1]) {
+
+                          listen.controls.action(availableChoices[result - 1].actions);
+
+                        } else {
+
+                          listen.triggerSound("world/sounds/notanoption.mp3");
+                          showOptions();
+
+                        }
+
+                      });
+
+                    }
+
+                    showOptions();
+
+                  } else {
+
+
+                  }
 
                 }
 
-              }
+              })
 
             })
 
@@ -700,7 +714,7 @@ listen.triggerSound = function (soundPath) {
 
 // Function for playing an array of sounds
 
-listen.playSoundList = function (soundList) {
+listen.playSoundList = function (soundList, callback) {
 
   var time = 0;
 
@@ -718,6 +732,7 @@ listen.playSoundList = function (soundList) {
 
   })
 
+  callback();
 
 };
 
