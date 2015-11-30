@@ -9,7 +9,7 @@
   },
   "playerStartPosition": {
     "room": "start",
-    "x": 300,
-    "y": 200
+    "x": 0,
+    "y": 0
   }
 }

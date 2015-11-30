@@ -1,8 +1,8 @@
 {
   "start": {
     "size": {
-      "width": 500,
-      "height": 500
+      "width": 1000,
+      "height": 1000
     },
     "soundFile": "start.mp3"
   }

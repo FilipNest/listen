@@ -298,7 +298,7 @@ listen.readJSON("world/settings.json").then(function (result) {
           listen.world.objects[thing] = things[thing];
           objectIndex += 1;
 
-          if (objectIndex === listen.settings.objectFiles.length) {
+          if (objectIndex > listen.settings.objectFiles.length) {
 
             Object.keys(listen.world.objects).forEach(function (loadedThing) {
 
@@ -688,7 +688,9 @@ listen.controls.tick = function () {
       context.strokeRect(listen.world.player.position.x, listen.world.player.position.y, 50, 50)
 
 
-      context.strokeRect(300, 300, 10, 10)
+      context.strokeRect(500, 500, 10, 10);
+      context.strokeRect(200, 200, 10, 10)
+
 
     }
 
@@ -911,9 +913,9 @@ listen.triggerSoundLooped = function (objectName, soundPath, xCoord, yCoord) {
   // The y coordinate is flipped to match the canvas coordinate space.
   var y = (yCoord - centerY) / 400;
   // Place the z coordinate slightly in behind the listener.
-  var z = 3;
+  var z = 0;
   // Tweak multiplier as necessary.
-  var scaleFactor = 3;
+  var scaleFactor = 40;
 
   sound.connect(sound.panner);
 
