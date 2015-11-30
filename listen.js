@@ -321,6 +321,12 @@ listen.readJSON("world/settings.json").then(function (result) {
             listen.soundList.push("world/sounds/wall.mp3");
             listen.soundList.push("world/sounds/notanoption.mp3");
 
+            listen.soundList.push("world/sounds/1.mp3");
+            listen.soundList.push("world/sounds/2.mp3");
+            listen.soundList.push("world/sounds/3.mp3");
+            listen.soundList.push("world/sounds/4.mp3");
+            listen.soundList.push("world/sounds/5.mp3");
+
             loadSounds(listen.soundList, function () {
 
               //              listen.triggerSound("world/sounds/chest.mp3");
@@ -749,17 +755,24 @@ listen.playSoundList = function (soundList, callback) {
 
   var time = 0;
 
-  soundList.forEach(function (sound) {
+  soundList.forEach(function (sound, index) {
 
-    var duration = listen.sounds[sound].duration * 1000;
+    var duration = (listen.sounds[sound].duration * 1000);
 
     window.setTimeout(function () {
 
-      listen.triggerSound(sound);
+      listen.triggerSound("world/sounds/" + (index + 1) + ".mp3");
+
+      window.setTimeout(function () {
+
+        listen.triggerSound(sound);
+
+      }, 300)
 
     }, time);
 
-    time += duration;
+
+    time += duration + 500;
 
   })
 
