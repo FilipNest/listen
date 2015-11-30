@@ -171,6 +171,18 @@ listen.controls.move = function (direction, amount) {
       break;
   }
 
+  var centerX = listen.world.player.room.size.width / 2;
+  var centerY = listen.world.player.room.size.height / 2;
+  var x = (listen.world.player.position.x - centerX) / 400;
+  // The y coordinate is flipped to match the canvas coordinate space.
+  var y = (listen.world.player.position.y - centerY) / 400;
+  // Place the z coordinate slightly in behind the listener.
+  var z = 2;
+  // Tweak multiplier as necessary.
+  var scaleFactor = 40;
+
+  context.listener.setPosition(-(x * scaleFactor), y * scaleFactor, z);
+
 };
 
 // Function for adding an object to a room
@@ -295,6 +307,16 @@ listen.readJSON("world/settings.json").then(function (result) {
               if (sound) {
 
                 listen.soundList.push("world/sounds/" + sound);
+
+              }
+
+              // If ambiet sound file
+
+              var ambient = listen.world.objects[loadedThing]["ambientSoundFile"];
+
+              if (ambient) {
+
+                listen.soundList.push("world/sounds/" + ambient);
 
               }
 
@@ -432,6 +454,14 @@ listen.ready = function () {
     if (thing.startingPosition.room) {
 
       listen.controls.moveObjectToRoom(element, thing.startingPosition.room, thing.startingPosition.x, thing.startingPosition.y);
+
+    }
+
+    // If thing has an ambient sound that is on, trigger it
+
+    if (thing.ambientSoundOn && thing.startingPosition.room === listen.settings.playerStartPosition.room) {
+
+      listen.triggerSoundLooped("world/sounds/" + thing.ambientSoundFile, thing.startingPosition.x, thing.startingPosition.y);
 
     }
 
@@ -650,14 +680,13 @@ listen.controls.tick = function () {
       listen.controls.move("y", vely);
 
       //       Debugging rectangles
+      var canvas = document.getElementById("area"),
+        context = canvas.getContext("2d");
 
-      //      var canvas = document.getElementById("area"),
-      //        context = canvas.getContext("2d");
-      //
-      //      context.strokeRect(listen.world.player.position.x, listen.world.player.position.y, 50, 50)
-      //
-      //
-      //      context.strokeRect(300, 300, 10, 10)
+      context.strokeRect(listen.world.player.position.x, listen.world.player.position.y, 50, 50)
+
+
+      context.strokeRect(300, 300, 10, 10)
 
     }
 
@@ -831,6 +860,43 @@ listen.playSoundList = function (soundList, callback, skipNumbers) {
     time += duration + 600;
 
   })
+
+};
+
+listen.triggerSoundLooped = function (soundPath, xCoord, yCoord) {
+
+  var sound = context.createBufferSource();
+
+  sound.loop = true;
+  sound.buffer = listen.sounds[soundPath]["sound"];
+
+  // Instead of hooking up the volume to the main volume, hook it up to the panner.
+
+  // And hook up the panner to the main volume.
+  // Position the panner node.
+  // Assume X and Y are in screen coordinates and the listener is at screen center.
+  sound.panner = context.createPanner();
+
+  var centerX = listen.world.player.room.size.width / 2;
+  var centerY = listen.world.player.room.size.height / 2;
+  var x = (xCoord - centerX) / 400;
+  // The y coordinate is flipped to match the canvas coordinate space.
+  var y = (yCoord - centerY) / 400;
+  // Place the z coordinate slightly in behind the listener.
+  var z = 3;
+  // Tweak multiplier as necessary.
+  var scaleFactor = 3;
+
+  sound.connect(sound.panner);
+
+  sound.panner.connect(context.destination);
+
+  sound.panner.setPosition(x * scaleFactor, y * scaleFactor, z);
+
+  sound.start(0);
+
+  // Position the listener at the origin (the default, just added for the sake of being explicit)
+  context.listener.setPosition(0, 0, 0);
 
 };
 

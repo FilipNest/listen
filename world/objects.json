@@ -6,6 +6,8 @@
       "y": 300
     },
     "soundFile": "chest.mp3",
+    "ambientSoundFile": "wall.mp3",
+    "ambientSoundOn": true,
     "triggerDistance": 100,
     "conditions": {
       "gold": ">3"
