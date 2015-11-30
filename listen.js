@@ -320,6 +320,7 @@ listen.readJSON("world/settings.json").then(function (result) {
 
             listen.soundList.push("world/sounds/wall.mp3");
             listen.soundList.push("world/sounds/notanoption.mp3");
+            listen.soundList.push("world/sounds/ping.mp3");
 
             listen.soundList.push("world/sounds/1.mp3");
             listen.soundList.push("world/sounds/2.mp3");
@@ -588,7 +589,7 @@ listen.controls.tick = function () {
 
                               showOptions();
 
-                            }, 2000);
+                            }, 500);
 
                           }
 
@@ -673,11 +674,15 @@ listen.controls.clickTimerOn = false;
 
 listen.controls.trackClicks = function (time, callback) {
 
+  listen.triggerSound("world/sounds/ping.mp3");
+
   listen.controls.clickCount = 0;
 
   listen.controls.clickTimerOn = true;
 
   window.setTimeout(function () {
+
+    listen.triggerSound("world/sounds/ping.mp3");
 
     listen.controls.clickTimerOn = false;
 
@@ -767,6 +772,16 @@ listen.playSoundList = function (soundList, callback) {
 
         listen.triggerSound(sound);
 
+        window.setTimeout(function () {
+
+          if (index === soundList.length - 1) {
+
+            callback();
+
+          }
+
+        }, duration)
+
       }, 300)
 
     }, time);
@@ -775,8 +790,6 @@ listen.playSoundList = function (soundList, callback) {
     time += duration + 500;
 
   })
-
-  callback();
 
 };
 
