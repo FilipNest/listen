@@ -310,6 +310,13 @@ listen.readJSON("world/settings.json").then(function (result) {
 
                   }
 
+
+                  if (choice.actions && choice.actions.soundFile) {
+
+                    listen.soundList.push("world/sounds/" + choice.actions.soundFile);
+
+                  }
+
                 })
 
               }
@@ -685,7 +692,7 @@ listen.controls.trackClicks = function (time, callback) {
     listen.triggerSound("world/sounds/ping.mp3");
 
     listen.controls.clickTimerOn = false;
-    
+
     // Pause before answering
 
     window.setTimeout(function () {
@@ -705,6 +712,8 @@ listen.world.player.options = null;
 // Select an action
 
 listen.controls.action = function (action) {
+
+  listen.triggerSound("world/sounds/" + action.soundFile);
 
   // Add attributes
 

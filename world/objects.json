@@ -26,7 +26,8 @@
             "room": "start",
             "x": 400,
             "y": 400
-          }
+          },
+          "soundFile": "alarmoff.mp3"
         }
     },
       {
@@ -46,7 +47,7 @@
             "x": 400,
             "y": 400
           },
-          "soundFile": "action.mp3"
+          "soundFile": "gold.mp3"
         }
     }]
   }
