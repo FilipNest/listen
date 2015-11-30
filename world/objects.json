@@ -2,13 +2,13 @@
   "alarm": {
     "startingPosition": {
       "room": "start",
-      "x": 200,
+      "x": 400,
       "y": 200
     },
     "soundFile": "alarmclock.mp3",
     "ambientSoundFile": "alarmringing.mp3",
     "ambientSoundOn": true,
-    "triggerDistance": 100,
+    "triggerDistance": 50,
     "conditions": {
       "silentalarm": "<1"
     },
@@ -68,41 +68,40 @@
       "openwindow": "<1"
     },
     "choices": [{
-        "conditions": {
+      "conditions": {
 
-          "openwindow": "<1"
+        "openwindow": "<1"
 
-        },
-        "soundFile": "openthewindow.mp3",
-        "actions": {
-          "attributes": {
-            "silentalarm": "+1"
-          }
-        }
+      },
+      "soundFile": "openthewindow.mp3",
+      "actions": {
+        "soundFile": "lockedwindow.mp3"
+      }
+    }]
+  },
+  "susan": {
+    "startingPosition": {
+      "room": "start",
+      "x": 300,
+      "y": 300
     },
-      {
-        "conditions": {
+    "soundFile": "susan.mp3",
+    "ambientSoundFile": "susanpurring.mp3",
+    "ambientSoundOn": true,
+    "triggerDistance": 100,
+    "conditions": {
+      "cat": "<1"
+    },
+    "choices": [{
+      "conditions": {
 
-          "silentalarm": "<1"
+        "openwindow": "<1"
 
-        },
-        "soundFile": "alarmclockleave.mp3"
-    }, {
-        "conditions": {
-
-          "silentalarm": "<1",
-          "openwindow": ">0"
-        },
-        "soundFile": "alarmclockthrow.mp3",
-        "actions": {
-          "attributes": {
-            "silentalarm": "+1"
-          },
-          "soundTriggers": {
-            "alarm": false
-          },
-          "soundFile": "alarmsilence.mp3"
-        }
+      },
+      "soundFile": "openthewindow.mp3",
+      "actions": {
+        "soundFile": "lockedwindow.mp3"
+      }
     }]
   }
 }

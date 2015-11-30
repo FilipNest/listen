@@ -106,18 +106,12 @@ listen.controls.checkForObjects = function () {
 
   // Function for checking distance
 
-  function checkDistance(first, second) {
+  function checkDistance(second, first) {
 
-    var xs,
-      ys;
+    var xd = second.x - first.x
+    var yd = second.y - first.y
 
-    xs = second.x - first.x;
-    xs = xs * xs;
-
-    ys = second.y - first.y;
-    ys = ys * ys;
-
-    return Math.sqrt(xs + ys);
+    return Math.sqrt(xd * xd + yd * yd);
   }
 
   // Loop over all the objects in the room
@@ -174,13 +168,9 @@ listen.controls.move = function (direction, amount) {
   var centerX = listen.world.player.room.size.width / 2;
   var centerY = listen.world.player.room.size.height / 2;
   var x = (listen.world.player.position.x - centerX) / 400;
-  // The y coordinate is flipped to match the canvas coordinate space.
   var y = (listen.world.player.position.y - centerY) / 400;
-  // Place the z coordinate slightly in behind the listener.
   var z = 2;
-  // Tweak multiplier as necessary.
   var scaleFactor = 40;
-
   context.listener.setPosition(x * scaleFactor, y * scaleFactor, z);
 
 };
@@ -222,7 +212,7 @@ listen.controls.moveObjectToRoom = function (objectName, room, xPosition, yPosit
   // Set position of object
 
   listen.world.rooms[room].objects[objectName].position.x = xPosition;
-  listen.world.rooms[room].objects[objectName].position.y = xPosition;
+  listen.world.rooms[room].objects[objectName].position.y = yPosition;
 
   // Delete any other places the object is in
 
@@ -454,7 +444,7 @@ listen.ready = function () {
     }
 
     if (thing.startingPosition.room) {
-
+      
       listen.controls.moveObjectToRoom(element, thing.startingPosition.room, thing.startingPosition.x, thing.startingPosition.y);
 
     }
@@ -675,11 +665,12 @@ listen.controls.tick = function () {
         delete listen.world.player.holdTimeout;
       }
 
-      var vely = -(5 * Math.cos(joystick.angle));
-      var velx = -(5 * Math.sin(joystick.angle));
+      var vx = (5) * Math.cos(joystick.angle)
 
-      listen.controls.move("x", velx);
-      listen.controls.move("y", vely);
+      var vy = (5) * Math.sin(joystick.angle)
+
+      listen.controls.move("x", -vy);
+      listen.controls.move("y", -vx);
 
       //       Debugging rectangles
       var canvas = document.getElementById("area"),
@@ -688,8 +679,8 @@ listen.controls.tick = function () {
       context.strokeRect(listen.world.player.position.x, listen.world.player.position.y, 50, 50)
 
 
-      context.strokeRect(500, 500, 10, 10);
-      context.strokeRect(200, 200, 10, 10)
+      //      context.strokeRect(500, 500, 10, 10);
+      context.strokeRect(400, 200, 10, 10)
 
 
     }
