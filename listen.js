@@ -685,10 +685,18 @@ listen.controls.trackClicks = function (time, callback) {
     listen.triggerSound("world/sounds/ping.mp3");
 
     listen.controls.clickTimerOn = false;
+    
+    // Pause before answering
 
-    callback(listen.controls.clickCount);
+    window.setTimeout(function () {
+
+      callback(listen.controls.clickCount);
+
+    }, 500)
 
   }, time)
+
+
 
 }
 
@@ -782,12 +790,12 @@ listen.playSoundList = function (soundList, callback) {
 
         }, duration)
 
-      }, 300)
+      }, 600)
 
     }, time);
 
 
-    time += duration + 500;
+    time += duration + 600;
 
   })
 
