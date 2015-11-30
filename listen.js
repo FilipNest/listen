@@ -181,7 +181,7 @@ listen.controls.move = function (direction, amount) {
   // Tweak multiplier as necessary.
   var scaleFactor = 40;
 
-  context.listener.setPosition(-(x * scaleFactor), y * scaleFactor, z);
+  context.listener.setPosition(x * scaleFactor, y * scaleFactor, z);
 
 };
 
@@ -348,9 +348,11 @@ listen.readJSON("world/settings.json").then(function (result) {
             // Add in default sounds
 
             listen.soundList.push("world/sounds/wall.mp3");
-            listen.soundList.push("world/sounds/notanoption.mp3");
-            listen.soundList.push("world/sounds/ping.mp3");
-            listen.soundList.push("world/sounds/here.mp3");
+
+            listen.soundList.push("world/sounds/pingin.mp3");
+            listen.soundList.push("world/sounds/pingout.mp3");
+
+            listen.soundList.push("world/sounds/got.mp3");
 
             listen.soundList.push("world/sounds/1.mp3");
             listen.soundList.push("world/sounds/2.mp3");
@@ -698,7 +700,7 @@ listen.controls.tick = function () {
 
         // New objects! Loop through them and play sounds
 
-        listen.triggerSound("world/sounds/here.mp3");
+        listen.triggerSound("world/sounds/got.mp3");
 
         var listSounds = [];
 
@@ -730,7 +732,7 @@ listen.controls.clickTimerOn = false;
 
 listen.controls.trackClicks = function (time, callback) {
 
-  listen.triggerSound("world/sounds/ping.mp3");
+  listen.triggerSound("world/sounds/pingin.mp3");
 
   listen.controls.clickCount = 0;
 
@@ -738,7 +740,7 @@ listen.controls.trackClicks = function (time, callback) {
 
   window.setTimeout(function () {
 
-    listen.triggerSound("world/sounds/ping.mp3");
+    listen.triggerSound("world/sounds/pingout.mp3");
 
     listen.controls.clickTimerOn = false;
 

@@ -1,59 +1,39 @@
 {
-  "chest": {
+  "alarm": {
     "startingPosition": {
       "room": "start",
       "x": 300,
       "y": 300
     },
-    "soundFile": "chest.mp3",
-    "ambientSoundFile": "wall.mp3",
+    "soundFile": "alarmclock.mp3",
+    "ambientSoundFile": "alarmringing.mp3",
     "ambientSoundOn": true,
     "triggerDistance": 100,
     "conditions": {
       "gold": ">3"
     },
     "choices": [{
-        "conditions": {
+      "conditions": {
 
-          "gold": ">4"
+        "gold": ">3"
 
+      },
+      "soundFile": "alarmclockoff.mp3",
+      "actions": {
+        "attributes": {
+          "gold": "+1"
         },
-        "soundFile": "alarm.mp3",
-        "actions": {
-          "attributes": {
-            "gold": "+1"
-          },
-          "movements": {
-            "thing": "Player",
-            "room": "start",
-            "x": 400,
-            "y": 400
-          },
-          "soundTriggers": {
-            "chest": false
-          },
-          "soundFile": "alarmoff.mp3"
-        }
-    },
-      {
-        "conditions": {
-
-          "gold": ">3"
-
+        "movements": {
+          "thing": "Player",
+          "room": "start",
+          "x": 400,
+          "y": 400
         },
-        "soundFile": "hello.mp3",
-        "actions": {
-          "attributes": {
-            "gold": "+1"
-          },
-          "movements": {
-            "thing": "Player",
-            "room": "start",
-            "x": 400,
-            "y": 400
-          },
-          "soundFile": "gold.mp3"
-        }
+        "soundTriggers": {
+          "alarm": false
+        },
+        "soundFile": "alarmsilence.mp3"
+      }
     }]
   }
 }
