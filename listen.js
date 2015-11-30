@@ -298,6 +298,22 @@ listen.readJSON("world/settings.json").then(function (result) {
 
               }
 
+              // Add choice sounds
+
+              if (listen.world.objects[loadedThing].choices) {
+
+                listen.world.objects[loadedThing].choices.forEach(function (choice) {
+
+                  if (choice["soundFile"]) {
+
+                    listen.soundList.push("world/sounds/" + choice.soundFile);
+
+                  }
+
+                })
+
+              }
+
             })
 
             // Add in default sounds
@@ -499,7 +515,7 @@ listen.controls.tick = function () {
             var objectOptions = [];
 
             Object.keys(listen.world.player.options).forEach(function (soundThing) {
-              
+
               objectOptions.push("world/sounds/" + listen.world.player.options[soundThing].object["soundFile"]);
 
             })
@@ -544,20 +560,35 @@ listen.controls.tick = function () {
 
                     var showOptions = function () {
 
-                      listen.controls.trackClicks(4000, function (result) {
+                      var optionSounds = [];
 
-                        if (availableChoices[result - 1]) {
+                      availableChoices.forEach(function (option) {
 
-                          listen.controls.action(availableChoices[result - 1].actions);
-
-                        } else {
-
-                          listen.triggerSound("world/sounds/notanoption.mp3");
-                          showOptions();
-
-                        }
+                        optionSounds.push("world/sounds/" + option.soundFile);
 
                       });
+
+                      listen.playSoundList(optionSounds, function () {
+
+                        listen.controls.trackClicks(4000, function (result) {
+
+                          if (availableChoices[result - 1]) {
+
+                            listen.controls.action(availableChoices[result - 1].actions);
+
+                          } else {
+
+                            window.setTimeout(function () {
+
+                              showOptions();
+
+                            }, 2000);
+
+                          }
+
+                        });
+
+                      })
 
                     }
 

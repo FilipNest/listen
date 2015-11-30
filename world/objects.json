@@ -16,7 +16,7 @@
           "gold": ">4"
 
         },
-        "description": "alarm.mp3",
+        "soundFile": "alarm.mp3",
         "actions": {
           "attributes": {
             "gold": "+1"
