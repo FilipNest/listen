@@ -29,6 +29,9 @@
             "x": 400,
             "y": 400
           },
+          "soundTriggers": {
+            "chest": false
+          },
           "soundFile": "alarmoff.mp3"
         }
     },

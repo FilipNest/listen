@@ -461,7 +461,7 @@ listen.ready = function () {
 
     if (thing.ambientSoundOn && thing.startingPosition.room === listen.settings.playerStartPosition.room) {
 
-      listen.triggerSoundLooped("world/sounds/" + thing.ambientSoundFile, thing.startingPosition.x, thing.startingPosition.y);
+      listen.triggerSoundLooped(element, "world/sounds/" + thing.ambientSoundFile, thing.startingPosition.x, thing.startingPosition.y);
 
     }
 
@@ -809,6 +809,30 @@ listen.controls.action = function (action) {
 
   }
 
+  if (action.soundTriggers) {
+
+    Object.keys(action.soundTriggers).forEach(function (currentObject) {
+
+      var result = action.soundTriggers[currentObject];
+
+      listen.ambientSounds[currentObject].stop();
+
+      if (result) {
+
+        thing = listen.world.objects[currentObject];
+
+        if (thing.ambientSoundOn) {
+
+          listen.triggerSoundLooped(element, "world/sounds/" + thing.ambientSoundFile, thing.position.x, thing.position.y);
+
+        }
+
+      }
+
+    })
+
+  }
+
 };
 
 listen.triggerSound = function (soundPath) {
@@ -863,7 +887,9 @@ listen.playSoundList = function (soundList, callback, skipNumbers) {
 
 };
 
-listen.triggerSoundLooped = function (soundPath, xCoord, yCoord) {
+listen.ambientSounds = {};
+
+listen.triggerSoundLooped = function (objectName, soundPath, xCoord, yCoord) {
 
   var sound = context.createBufferSource();
 
@@ -895,8 +921,7 @@ listen.triggerSoundLooped = function (soundPath, xCoord, yCoord) {
 
   sound.start(0);
 
-  // Position the listener at the origin (the default, just added for the sake of being explicit)
-  context.listener.setPosition(0, 0, 0);
+  listen.ambientSounds[objectName] = sound;
 
 };
 
