@@ -2,8 +2,8 @@
   "alarm": {
     "startingPosition": {
       "room": "start",
-      "x": 400,
-      "y": 200
+      "x": 100,
+      "y": 400
     },
     "soundFile": "alarmclock.mp3",
     "ambientSoundFile": "alarmringing.mp3",
@@ -57,8 +57,8 @@
   "window": {
     "startingPosition": {
       "room": "start",
-      "x": 500,
-      "y": 500
+      "x": 700,
+      "y": 900
     },
     "soundFile": "window.mp3",
     "ambientSoundFile": "trafficclosed.mp3",
@@ -68,22 +68,45 @@
       "openwindow": "<1"
     },
     "choices": [{
-      "conditions": {
+        "conditions": {
 
-        "openwindow": "<1"
+          "openwindow": "<1",
+          "windowkey": "<1"
 
-      },
-      "soundFile": "openthewindow.mp3",
-      "actions": {
-        "soundFile": "lockedwindow.mp3"
-      }
+        },
+        "soundFile": "openthewindow.mp3",
+        "actions": {
+          "soundFile": "lockedwindow.mp3",
+          "attributes": {
+            "keyneeded": "=1"
+          }
+        }
+    },
+      {
+        "conditions": {
+
+          "openwindow": "<1",
+          "windowkey": "=1"
+
+        },
+        "soundFile": "openthewindow.mp3",
+        "actions": {
+          "soundFile": "busystreet.mp3",
+          "attributes": {
+            "ringingphone": "+1",
+            "openwindow": "+1"
+          },
+          "soundTriggers": {
+            "telephone": true
+          }
+        }
     }]
   },
   "susan": {
     "startingPosition": {
       "room": "start",
-      "x": 300,
-      "y": 300
+      "x": 600,
+      "y": 200
     },
     "soundFile": "susan.mp3",
     "ambientSoundFile": "susanpurring.mp3",
@@ -93,15 +116,79 @@
       "cat": "<1"
     },
     "choices": [{
-      "conditions": {
-
-        "openwindow": "<1"
-
-      },
-      "soundFile": "openthewindow.mp3",
-      "actions": {
-        "soundFile": "lockedwindow.mp3"
-      }
+        "conditions": {
+          "lostcat": "<1"
+        },
+        "soundFile": "listentosusan.mp3",
+        "actions": {
+          "soundFile": "soundslikedreaming.mp3"
+        }
+    },
+      {
+        "conditions": {
+          "lostcat": "<1"
+        },
+        "soundFile": "strokesusan.mp3",
+        "actions": {
+          "soundFile": "susanstroked.mp3"
+        }
+    },
+      {
+        "conditions": {
+          "keyneeded": ">0",
+          "windowkey": "<1"
+        },
+        "soundFile": "grabwindowkey.mp3",
+        "actions": {
+          "soundFile": "grabbedkey.mp3",
+          "attributes": {
+            "windowkey": "+1"
+          }
+        }
+    }]
+  },
+  "telephone": {
+    "startingPosition": {
+      "room": "start",
+      "x": 800,
+      "y": 100
+    },
+    "soundFile": "telephone.mp3",
+    "ambientSoundFile": "telephoneringing.mp3",
+    "ambientSoundOn": false,
+    "triggerDistance": 100,
+    "conditions": {
+      "ringingphone": "=1"
+    },
+    "choices": [{
+        "conditions": {
+          "lostcat": "<1"
+        },
+        "soundFile": "pickupphone.mp3",
+        "actions": {
+          "soundTriggers": {
+            "telephone": false
+          },
+          "attributes": {
+            "endgame": "=1"
+          }
+        }
+    },
+      {
+        "conditions": {
+          "lostcat": "<1",
+          "openwindow": "=1"
+        },
+        "soundFile": "throwtelephone.mp3",
+        "actions": {
+          "soundFile": "grabbedkey.mp3",
+          "attributes": {
+            "endgame": "=1"
+          },
+          "soundTriggers": {
+            "telephone": false
+          }
+        }
     }]
   }
 }

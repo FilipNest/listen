@@ -342,6 +342,8 @@ listen.readJSON("world/settings.json").then(function (result) {
             listen.soundList.push("world/sounds/pingin.mp3");
             listen.soundList.push("world/sounds/pingout.mp3");
 
+            listen.soundList.push("world/sounds/nothinghere.mp3");
+
             listen.soundList.push("world/sounds/got.mp3");
 
             listen.soundList.push("world/sounds/1.mp3");
@@ -412,6 +414,8 @@ listen.ready = function () {
 
   listen.controls.moveToRoom(listen.settings.playerStartPosition.room, listen.settings.playerStartPosition.x, listen.settings.playerStartPosition.y);
 
+  listen.triggerSound("world/sounds/start.mp3");
+
   Object.keys(listen.world.rooms).forEach(function (room) {
 
     if (!listen.world.rooms[room].objects) {
@@ -444,7 +448,7 @@ listen.ready = function () {
     }
 
     if (thing.startingPosition.room) {
-      
+
       listen.controls.moveObjectToRoom(element, thing.startingPosition.room, thing.startingPosition.x, thing.startingPosition.y);
 
     }
@@ -473,9 +477,15 @@ listen.ready = function () {
 
 listen.controls.checkCondition = function (conditions) {
 
-  var result;
+  var result = true;
 
   Object.keys(conditions).forEach(function (attribute) {
+
+    if (!result) {
+
+      return false;
+
+    }
 
     // See what kind of attribute value operator it is
 
@@ -529,8 +539,6 @@ listen.controls.checkCondition = function (conditions) {
 
 // Game tick
 
-listen.controls.paused = false;
-
 listen.controls.tick = function () {
 
   window.setInterval(function () {
@@ -541,11 +549,7 @@ listen.controls.tick = function () {
 
         listen.world.player.holdTimeout = window.setTimeout(function () {
 
-          listen.controls.paused = true;
-
-          if (listen.world.player.options) {
-
-            console.log("Click your selection");
+          if (Object.keys(listen.world.player.options).length) {
 
             // Add sounds to sound list
 
@@ -564,16 +568,13 @@ listen.controls.tick = function () {
                 if (result > Object.keys(listen.world.player.options).length + 1) {
 
                   console.log("cancelled");
-                  listen.controls.paused = false;
                   return false;
 
                 } else {
 
                   var selected = Object.keys(listen.world.player.options)[result - 1];
 
-                  listen.controls.paused = false;
-
-                  if (listen.world.player.options[selected].object.choices && listen.world.player.options[selected].object.choices.length > 0) {
+                  if (listen.world.player.options[selected] && listen.world.player.options[selected].object.choices && listen.world.player.options[selected].object.choices.length > 0) {
 
                     var choices = listen.world.player.options[selected].object.choices;
 
@@ -592,8 +593,6 @@ listen.controls.tick = function () {
                     })
 
                     // Show list of available choices and trigger timeout
-
-                    console.log("Pick a choice!");
 
                     var showOptions = function () {
 
@@ -633,7 +632,6 @@ listen.controls.tick = function () {
 
                   } else {
 
-
                   }
 
                 }
@@ -644,9 +642,7 @@ listen.controls.tick = function () {
 
           } else {
 
-            listen.controls.paused = false;
-
-            console.log("Nothing to see here");
+            listen.triggerSound("world/sounds/nothinghere.mp3");
 
           }
 
@@ -665,22 +661,22 @@ listen.controls.tick = function () {
         delete listen.world.player.holdTimeout;
       }
 
-      var vx = (5) * Math.cos(joystick.angle)
+      var vx = (10) * Math.cos(joystick.angle)
 
-      var vy = (5) * Math.sin(joystick.angle)
+      var vy = (10) * Math.sin(joystick.angle)
 
       listen.controls.move("x", -vy);
       listen.controls.move("y", -vx);
 
       //       Debugging rectangles
-      var canvas = document.getElementById("area"),
-        context = canvas.getContext("2d");
-
-      context.strokeRect(listen.world.player.position.x, listen.world.player.position.y, 50, 50)
-
-
-      //      context.strokeRect(500, 500, 10, 10);
-      context.strokeRect(400, 200, 10, 10)
+      //      var canvas = document.getElementById("area"),
+      //        context = canvas.getContext("2d");
+      //
+      //      context.strokeRect(listen.world.player.position.x, listen.world.player.position.y, 50, 50)
+      //
+      //
+      //      //      context.strokeRect(500, 500, 10, 10);
+      //      context.strokeRect(400, 200, 10, 10)
 
 
     }
@@ -810,17 +806,15 @@ listen.controls.action = function (action) {
 
       var result = action.soundTriggers[currentObject];
 
-      listen.ambientSounds[currentObject].stop();
+      if (listen.ambientSounds[currentObject]) {
+        listen.ambientSounds[currentObject].stop();
+      }
 
       if (result) {
 
-        thing = listen.world.objects[currentObject];
+        var thing = listen.world.objects[currentObject];
 
-        if (thing.ambientSoundOn) {
-
-          listen.triggerSoundLooped(element, "world/sounds/" + thing.ambientSoundFile, thing.position.x, thing.position.y);
-
-        }
+        listen.triggerSoundLooped(currentObject, "world/sounds/" + thing.ambientSoundFile, thing.position.x, thing.position.y);
 
       }
 
