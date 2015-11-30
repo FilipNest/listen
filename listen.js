@@ -154,16 +154,18 @@ listen.controls.move = function (direction, amount) {
 
   switch (direction) {
     case "y":
-      if (listen.world.player.position.y + amount < listen.world.player.room.size.height) {
+      if (listen.world.player.position.y + amount <= listen.world.player.room.size.height && listen.world.player.position.y + amount >= 1) {
         listen.world.player.position.y += amount;
       } else {
+        listen.triggerSound("world/sounds/wall.mp3");
         return false;
       }
       break;
     case "x":
-      if (listen.world.player.position.x - amount < listen.world.player.room.size.width) {
+      if (listen.world.player.position.x - amount <= listen.world.player.room.size.width && listen.world.player.position.x - amount >= 1) {
         listen.world.player.position.x -= amount;
       } else {
+        listen.triggerSound("world/sounds/wall.mp3");
         return false;
       }
       break;
@@ -224,6 +226,10 @@ listen.controls.moveObjectToRoom = function (objectName, room, xPosition, yPosit
 
 };
 
+// Store for sound file names 
+
+listen.soundList = [];
+
 // Function for reading JSON files and storing their settings
 
 listen.readJSON = function (url) {
@@ -282,9 +288,26 @@ listen.readJSON("world/settings.json").then(function (result) {
 
           if (objectIndex === listen.settings.objectFiles.length) {
 
-            loadSounds(["world/sounds/chest.mp3"], function () {
+            Object.keys(listen.world.objects).forEach(function (loadedThing) {
 
-              listen.trggerSound("world/sounds/chest.mp3");
+              var sound = listen.world.objects[loadedThing]["soundFile"];
+
+              if (sound) {
+
+                listen.soundList.push("world/sounds/" + sound);
+
+              }
+
+            })
+
+            // Add in default sounds
+
+            listen.soundList.push("world/sounds/wall.mp3");
+
+            loadSounds(listen.soundList, function () {
+
+              //              listen.triggerSound("world/sounds/chest.mp3");
+              //              listen.triggerSound("world/sounds/start.mp3");
 
               listen.ready();
 
@@ -309,6 +332,15 @@ listen.readJSON("world/settings.json").then(function (result) {
       Object.keys(rooms).forEach(function (room) {
 
         listen.world.rooms[room] = rooms[room];
+
+        var sound = listen.world.rooms[room]["soundFile"];
+
+        if (sound) {
+
+          listen.soundList.push("world/sounds/" + sound);
+
+        }
+
 
         roomIndex += 1;
 
@@ -548,13 +580,13 @@ listen.controls.tick = function () {
 
       //       Debugging rectangles
 
-      //            var canvas = document.getElementById("area"),
-      //           context = canvas.getContext("2d");
-      //
-      //         context.strokeRect(listen.world.player.position.x, listen.world.player.position.y, 50, 50)
-      //
-      //
-      //         context.strokeRect(300, 300, 10, 10)
+      var canvas = document.getElementById("area"),
+        context = canvas.getContext("2d");
+
+      context.strokeRect(listen.world.player.position.x, listen.world.player.position.y, 50, 50)
+
+
+      context.strokeRect(300, 300, 10, 10)
 
     }
 
@@ -643,7 +675,7 @@ listen.controls.action = function (action) {
 
 };
 
-listen.trggerSound = function (soundPath) {
+listen.triggerSound = function (soundPath) {
 
   var source1 = context.createBufferSource();
   source1.buffer = listen.sounds[soundPath]["sound"];
