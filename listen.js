@@ -303,6 +303,7 @@ listen.readJSON("world/settings.json").then(function (result) {
             // Add in default sounds
 
             listen.soundList.push("world/sounds/wall.mp3");
+            listen.soundList.push("world/sounds/notanoption.mp3");
 
             loadSounds(listen.soundList, function () {
 
@@ -529,15 +530,26 @@ listen.controls.tick = function () {
 
                   console.log("Pick a choice!");
 
-                  listen.controls.trackClicks(4000, function (result) {
+                  var showOptions = function () {
 
-                    if (availableChoices[result - 1]) {
+                    listen.controls.trackClicks(4000, function (result) {
 
-                      listen.controls.action(availableChoices[result - 1].actions);
+                      if (availableChoices[result - 1]) {
 
-                    }
+                        listen.controls.action(availableChoices[result - 1].actions);
 
-                  });
+                      } else {
+
+                        listen.triggerSound("world/sounds/notanoption.mp3");
+                        showOptions();
+
+                      }
+
+                    });
+
+                  }
+
+                  showOptions();
 
                 } else {
 
@@ -610,13 +622,15 @@ listen.controls.clickTimerOn = false;
 
 listen.controls.trackClicks = function (time, callback) {
 
+  listen.controls.clickCount = 0;
+
   listen.controls.clickTimerOn = true;
 
   window.setTimeout(function () {
 
-    callback(listen.controls.clickCount);
-
     listen.controls.clickTimerOn = false;
+
+    callback(listen.controls.clickCount);
 
   }, time)
 

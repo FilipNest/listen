@@ -97,7 +97,7 @@ window.addEventListener('load', function () {
   function start(event) {
 
     if (listen.controls.clickTimerOn) {
-
+      
       listen.controls.clickCount += 1;
 
     }
