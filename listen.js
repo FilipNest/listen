@@ -651,13 +651,13 @@ listen.controls.tick = function () {
 
       //       Debugging rectangles
 
-//      var canvas = document.getElementById("area"),
-//        context = canvas.getContext("2d");
-//
-//      context.strokeRect(listen.world.player.position.x, listen.world.player.position.y, 50, 50)
-//
-//
-//      context.strokeRect(300, 300, 10, 10)
+      //      var canvas = document.getElementById("area"),
+      //        context = canvas.getContext("2d");
+      //
+      //      context.strokeRect(listen.world.player.position.x, listen.world.player.position.y, 50, 50)
+      //
+      //
+      //      context.strokeRect(300, 300, 10, 10)
 
     }
 
@@ -666,10 +666,22 @@ listen.controls.tick = function () {
     if (Object.keys(listen.controls.checkForObjects()).length) {
 
       if (listen.world.player.options && Object.keys(listen.controls.checkForObjects()).length > Object.keys(listen.world.player.options).length) {
-        
-        // New objects!
+
+        // New objects! Loop through them and play sounds
 
         listen.triggerSound("world/sounds/here.mp3");
+
+        var listSounds = [];
+
+        Object.keys(listen.controls.checkForObjects()).forEach(function (key) {
+
+          var currentObject = listen.controls.checkForObjects()[key];
+
+          listSounds.push("world/sounds/" + currentObject.object.soundFile);
+
+        })
+
+        listen.playSoundList(listSounds, Function, true);
 
       }
 
@@ -781,7 +793,7 @@ listen.triggerSound = function (soundPath) {
 
 // Function for playing an array of sounds
 
-listen.playSoundList = function (soundList, callback) {
+listen.playSoundList = function (soundList, callback, skipNumbers) {
 
   var time = 0;
 
@@ -791,7 +803,11 @@ listen.playSoundList = function (soundList, callback) {
 
     window.setTimeout(function () {
 
-      listen.triggerSound("world/sounds/" + (index + 1) + ".mp3");
+      if (!skipNumbers) {
+
+        listen.triggerSound("world/sounds/" + (index + 1) + ".mp3");
+
+      }
 
       window.setTimeout(function () {
 
