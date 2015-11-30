@@ -282,7 +282,13 @@ listen.readJSON("world/settings.json").then(function (result) {
 
           if (objectIndex === listen.settings.objectFiles.length) {
 
-            listen.ready();
+            loadSounds(["world/sounds/chest.mp3"], function () {
+
+              listen.trggerSound("world/sounds/chest.mp3");
+
+              listen.ready();
+
+            });
 
           }
 
@@ -634,6 +640,15 @@ listen.controls.action = function (action) {
     })
 
   }
+
+};
+
+listen.trggerSound = function (soundPath) {
+
+  var source1 = context.createBufferSource();
+  source1.buffer = listen.sounds[soundPath]["sound"];
+  source1.connect(context.destination);
+  source1.start(0);
 
 };
 

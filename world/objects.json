@@ -5,6 +5,7 @@
       "x": 300,
       "y": 300
     },
+    "soundFile": "chest.mp3",
     "triggerDistance": 200,
     "conditions": {
       "gold": ">3"
@@ -34,7 +35,7 @@
           "gold": ">3"
 
         },
-        "description": "hello.mp3",
+        "soundFile": "hello.mp3",
         "actions": {
           "attributes": {
             "gold": "+1"
@@ -44,7 +45,8 @@
             "room": "start",
             "x": 400,
             "y": 400
-          }
+          },
+          "soundFile": "action.mp3"
         }
     }]
   }
