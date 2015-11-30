@@ -684,5 +684,28 @@ listen.triggerSound = function (soundPath) {
 
 };
 
+// Function for playing an array of sounds
+
+listen.playSoundList = function (soundList) {
+
+  var time = 0;
+
+  soundList.forEach(function (sound) {
+
+    var duration = listen.sounds[sound].duration * 1000;
+
+    window.setTimeout(function () {
+
+      listen.triggerSound(sound);
+
+    }, time);
+
+    time += duration;
+
+  })
+
+
+};
+
 //listen.controls.moveToRoom("start", 200, 200);
 //listen.controls.moveObjectToRoom("chest", "end", 400, 400);
