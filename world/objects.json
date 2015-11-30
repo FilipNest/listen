@@ -6,7 +6,7 @@
       "y": 300
     },
     "soundFile": "chest.mp3",
-    "triggerDistance": 200,
+    "triggerDistance": 100,
     "conditions": {
       "gold": ">3"
     },

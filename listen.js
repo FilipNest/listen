@@ -328,6 +328,7 @@ listen.readJSON("world/settings.json").then(function (result) {
             listen.soundList.push("world/sounds/wall.mp3");
             listen.soundList.push("world/sounds/notanoption.mp3");
             listen.soundList.push("world/sounds/ping.mp3");
+            listen.soundList.push("world/sounds/here.mp3");
 
             listen.soundList.push("world/sounds/1.mp3");
             listen.soundList.push("world/sounds/2.mp3");
@@ -625,7 +626,6 @@ listen.controls.tick = function () {
 
             console.log("Nothing to see here");
 
-
           }
 
 
@@ -651,13 +651,13 @@ listen.controls.tick = function () {
 
       //       Debugging rectangles
 
-      var canvas = document.getElementById("area"),
-        context = canvas.getContext("2d");
-
-      context.strokeRect(listen.world.player.position.x, listen.world.player.position.y, 50, 50)
-
-
-      context.strokeRect(300, 300, 10, 10)
+//      var canvas = document.getElementById("area"),
+//        context = canvas.getContext("2d");
+//
+//      context.strokeRect(listen.world.player.position.x, listen.world.player.position.y, 50, 50)
+//
+//
+//      context.strokeRect(300, 300, 10, 10)
 
     }
 
@@ -665,11 +665,19 @@ listen.controls.tick = function () {
 
     if (Object.keys(listen.controls.checkForObjects()).length) {
 
+      if (listen.world.player.options && Object.keys(listen.controls.checkForObjects()).length > Object.keys(listen.world.player.options).length) {
+        
+        // New objects!
+
+        listen.triggerSound("world/sounds/here.mp3");
+
+      }
+
       listen.world.player.options = listen.controls.checkForObjects();
 
     } else {
 
-      listen.world.player.options = null;
+      listen.world.player.options = {};
 
     }
 
@@ -707,7 +715,7 @@ listen.controls.trackClicks = function (time, callback) {
 
 }
 
-listen.world.player.options = null;
+listen.world.player.options = {};
 
 // Select an action
 
