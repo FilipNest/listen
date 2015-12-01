@@ -574,6 +574,17 @@ listen.controls.tick = function () {
 
                   var selected = Object.keys(listen.world.player.options)[result - 1];
 
+                  if (!selected) {
+
+                    if (listen.world.player.holdTimeout) {
+                      window.clearTimeout(listen.world.player.holdTimeout);
+                      delete listen.world.player.holdTimeout;
+                    }
+
+                    return false;
+
+                  }
+
                   if (listen.world.player.options[selected] && listen.world.player.options[selected].object.choices && listen.world.player.options[selected].object.choices.length > 0) {
 
                     var choices = listen.world.player.options[selected].object.choices;
@@ -669,14 +680,14 @@ listen.controls.tick = function () {
       listen.controls.move("y", -vx);
 
       //       Debugging rectangles
-            var canvas = document.getElementById("area"),
-              context = canvas.getContext("2d");
+      var canvas = document.getElementById("area"),
+        context = canvas.getContext("2d");
       //
-            context.strokeRect(listen.world.player.position.x, listen.world.player.position.y, 50, 50)
-      //
-      //
-      //      //      context.strokeRect(500, 500, 10, 10);
-            context.strokeRect(900, 700, 10, 10)
+      context.strokeRect(listen.world.player.position.x, listen.world.player.position.y, 50, 50)
+        //
+        //
+        //      //      context.strokeRect(500, 500, 10, 10);
+      context.strokeRect(900, 700, 10, 10)
 
 
     }
