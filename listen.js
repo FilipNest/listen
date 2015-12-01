@@ -409,6 +409,8 @@ listen.readJSON("world/settings.json").then(function (result) {
 // World loaded, ready.
 
 listen.ready = function () {
+  
+  document.getElementById("text").innerHTML = "";
 
   // Move player to starting room
 
