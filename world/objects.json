@@ -197,7 +197,7 @@
     "startingPosition": {
       "room": "start",
       "x": 900,
-      "y": 700
+      "y": 500
     },
     "soundFile": "piano.mp3",
     "triggerDistance": 100,
