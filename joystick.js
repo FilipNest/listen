@@ -67,12 +67,12 @@ window.addEventListener('load', function () {
       var radius = 30;
 
       context.beginPath();
-      context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-      context.fillStyle = 'rgba(255, 255, 255, 0.3)';
-      context.fill();
-      context.lineWidth = 2;
-      context.strokeStyle = '#003300';
-      context.stroke();
+//      context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+//      context.fillStyle = 'rgba(255, 255, 255, 0.3)';
+//      context.fill();
+//      context.lineWidth = 2;
+//      context.strokeStyle = '#003300';
+//      context.stroke();
 
       //Create moving
 
@@ -82,11 +82,11 @@ window.addEventListener('load', function () {
       var radius = 30;
 
       context.beginPath();
-      context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-      context.fillStyle = color;
-      context.fill();
-      context.lineWidth = 2;
-      context.strokeStyle = '#003300';
+//      context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+//      context.fillStyle = color;
+//      context.fill();
+//      context.lineWidth = 2;
+//      context.strokeStyle = '#003300';
       context.stroke();
     }
   };
