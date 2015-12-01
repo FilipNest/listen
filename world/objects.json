@@ -158,6 +158,7 @@
     "ambientSoundOn": false,
     "triggerDistance": 100,
     "conditions": {
+      "endgame": "<1",
       "ringingphone": "=1"
     },
     "choices": [{
@@ -166,6 +167,7 @@
         },
         "soundFile": "pickupphone.mp3",
         "actions": {
+          "soundFile": "finished.mp3",
           "soundTriggers": {
             "telephone": false
           },
@@ -181,7 +183,7 @@
         },
         "soundFile": "throwtelephone.mp3",
         "actions": {
-          "soundFile": "grabbedkey.mp3",
+          "soundFile": "thrownthephone.mp3",
           "attributes": {
             "endgame": "=1"
           },
