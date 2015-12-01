@@ -1,4 +1,6 @@
-# Listen - A JSON-powered engine for making audio-only adventures
+# Listen
+
+## A JSON-powered engine for making audio-only adventures
 
 I will pad out this documentation once I get a bit more sleep but here's the basics.
 
