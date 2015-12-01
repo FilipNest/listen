@@ -192,5 +192,32 @@
           }
         }
     }]
+  },
+  "piano": {
+    "startingPosition": {
+      "room": "start",
+      "x": 900,
+      "y": 700
+    },
+    "soundFile": "piano.mp3",
+    "triggerDistance": 100,
+    "conditions": {
+      "lostcat": "<1"
+    },
+    "choices": [{
+      "conditions": {
+        "lostcat": "<1"
+      },
+      "soundFile": "playpiano.mp3",
+      "actions": {
+        "soundFile": "pianoplayed.mp3"
+      }
+    }, {
+      "conditions": {
+        "lostcat": "<1"
+      },
+      "soundFile": "donotplaypiano.mp3",
+      "actions": {}
+    }]
   }
 }

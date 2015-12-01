@@ -669,14 +669,14 @@ listen.controls.tick = function () {
       listen.controls.move("y", -vx);
 
       //       Debugging rectangles
-      //      var canvas = document.getElementById("area"),
-      //        context = canvas.getContext("2d");
+            var canvas = document.getElementById("area"),
+              context = canvas.getContext("2d");
       //
-      //      context.strokeRect(listen.world.player.position.x, listen.world.player.position.y, 50, 50)
+            context.strokeRect(listen.world.player.position.x, listen.world.player.position.y, 50, 50)
       //
       //
       //      //      context.strokeRect(500, 500, 10, 10);
-      //      context.strokeRect(400, 200, 10, 10)
+            context.strokeRect(900, 700, 10, 10)
 
 
     }
