@@ -8,6 +8,8 @@ This demo is available at http://filipnest.com/listen/
 
 I'm looking for people of all sorts (voice actors, level designers, writers, testers) to help me make a beautiful, epic adventure with it. Please get in touch in the issue queue or elsewhere if you want to help. 
 
+There's already an issue queue building so if you want to help out on any of them I'd happily accept pull requests. I've even put in a label for feature requests.
+
 ## How it works
 
 The world the engine puts the adventurer in consists of rooms (or a single room in the case of the demo) filled with objects/things. Things usually, but not always, have an ambient sound attached to them to make finding them easier. Others may be stumbled apon randomly or by following a direction set by the location of other things. The logic of the game is based around the concept of things, attributes, events, actions and choices.
