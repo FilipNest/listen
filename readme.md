@@ -6,9 +6,9 @@ Listen is a (game) engine made using JavaScript, especially the Web Audio API. I
 
 This demo is available at http://filipnest.com/listen/ 
 
-I'm looking for people of all sorts (voice actors, level designers, writers, testers) to help me make a beautiful, epic adventure with it. Please get in touch in the issue queue or elsewhere if you want to help. 
+**I'm looking for people of all sorts (voice actors, level designers, writers, testers) to help me make a beautiful, epic adventure with it. Please get in touch in the issue queue or elsewhere if you want to help.** 
 
-There's already an issue queue building so if you want to help out on any of them I'd happily accept pull requests. I've even put in a label for feature requests.
+**There's already an issue queue building so if you want to help out on any of them I'd happily accept pull requests. I've even put in a label for feature requests.**
 
 ## How it works
 
