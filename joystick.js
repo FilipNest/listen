@@ -1,4 +1,10 @@
-//Wait for page load
+// Prevent context menu from appearing
+
+window.oncontextmenu = function(event) {
+     event.preventDefault();
+     event.stopPropagation();
+     return false;
+};
 
 var joystick = {
   angle: 0,
